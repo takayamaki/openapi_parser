@@ -51,6 +51,10 @@ module OpenAPIParser
       class ExampleSingularDeprecation < Rule
         def check: (OpenAPIParser::Schemas::OpenAPI root) -> Array[SpecValidator::SpecViolation]
       end
+
+      class PathItemsIn30 < Rule
+        def check: (OpenAPIParser::Schemas::OpenAPI root) -> Array[SpecValidator::SpecViolation]
+      end
     end
   end
 
