@@ -1,3 +1,7 @@
+require_relative 'spec_validator/spec_violation'
+require_relative 'spec_validator/rule'
+require_relative 'spec_validator/rules/exclusive_minimum'
+
 module OpenAPIParser
   # Validates that a parsed OpenAPI document is consistent with the version
   # it declares (3.0 vs 3.1). The parse layer is intentionally permissive;
@@ -21,7 +25,9 @@ module OpenAPIParser
     private
 
       def rules
-        []
+        [
+          Rules::ExclusiveMinimum,
+        ]
       end
   end
 end

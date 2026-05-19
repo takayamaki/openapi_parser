@@ -19,11 +19,29 @@ RSpec.describe 'OpenAPIParser::SpecValidator' do
     end
 
     context 'with a root whose openapi field is unrecognized' do
-      it 'returns an empty array (version-specific rules are skipped)'
+      it 'returns an empty array (version-specific rules are skipped)' do
+        root = parse_clean_root('4.0.0')
+        expect(OpenAPIParser::SpecValidator.run(root)).to eq []
+      end
     end
 
     context 'with violations detected by a registered rule' do
-      it 'returns the collected SpecViolation list'
+      it 'returns the collected SpecViolation list' do
+        raw = {
+          'openapi' => '3.0.0',
+          'info' => { 'title' => 'test', 'version' => '1.0' },
+          'paths' => {},
+          'components' => {
+            'schemas' => {
+              'Sample' => { 'type' => 'integer', 'exclusiveMinimum' => 5 },
+            },
+          },
+        }
+        root = OpenAPIParser.parse(raw, strict_reference_validation: false)
+        violations = OpenAPIParser::SpecValidator.run(root)
+        expect(violations.size).to eq 1
+        expect(violations.first).to be_a(OpenAPIParser::SpecViolation)
+      end
     end
   end
 end
