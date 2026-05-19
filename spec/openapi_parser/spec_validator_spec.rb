@@ -1,9 +1,21 @@
 require_relative '../spec_helper'
 
 RSpec.describe 'OpenAPIParser::SpecValidator' do
+  def parse_clean_root(version)
+    raw = {
+      'openapi' => version,
+      'info' => { 'title' => 'test', 'version' => '1.0' },
+      'paths' => {},
+    }
+    OpenAPIParser.parse(raw, strict_reference_validation: false)
+  end
+
   describe '.run' do
     context 'with a root that has no spec-version-specific issues' do
-      it 'returns an empty array'
+      it 'returns an empty array' do
+        root = parse_clean_root('3.0.0')
+        expect(OpenAPIParser::SpecValidator.run(root)).to eq []
+      end
     end
 
     context 'with a root whose openapi field is unrecognized' do
