@@ -66,7 +66,9 @@ RSpec.describe OpenAPIParser::Schemas::OpenAPI do
     end
 
     context 'when the openapi field is missing' do
-      it 'returns :unknown'
+      it 'returns :unknown' do
+        expect(parse_with_openapi_field(nil, present: false).openapi_version).to eq :unknown
+      end
     end
 
     context 'with a non-string openapi field' do

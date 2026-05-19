@@ -23,6 +23,8 @@ module OpenAPIParser::Schemas
 
     # @return [Symbol] :v3_0 / :v3_1 / :unknown
     def openapi_version
+      return :unknown if openapi.nil?
+
       if openapi.start_with?('3.0')
         :v3_0
       elsif openapi.start_with?('3.1')
