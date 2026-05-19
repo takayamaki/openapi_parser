@@ -60,7 +60,9 @@ RSpec.describe OpenAPIParser::Schemas::OpenAPI do
     end
 
     context 'with an unknown major version like "4.0.0"' do
-      it 'returns :unknown'
+      it 'returns :unknown' do
+        expect(parse_with_openapi_field('4.0.0').openapi_version).to eq :unknown
+      end
     end
 
     context 'when the openapi field is missing' do
