@@ -36,19 +36,27 @@ RSpec.describe OpenAPIParser::Schemas::OpenAPI do
     end
 
     context 'with a typical 3.1.x version like "3.1.0"' do
-      it 'returns :v3_1'
+      it 'returns :v3_1' do
+        expect(parse_with_openapi_field('3.1.0').openapi_version).to eq :v3_1
+      end
     end
 
     context 'with a minor-only version "3.0"' do
-      it 'returns :v3_0'
+      it 'returns :v3_0' do
+        expect(parse_with_openapi_field('3.0').openapi_version).to eq :v3_0
+      end
     end
 
     context 'with a minor-only version "3.1"' do
-      it 'returns :v3_1'
+      it 'returns :v3_1' do
+        expect(parse_with_openapi_field('3.1').openapi_version).to eq :v3_1
+      end
     end
 
     context 'with a prerelease tag like "3.0.0-rc1"' do
-      it 'returns :v3_0 by prefix match'
+      it 'returns :v3_0 by prefix match' do
+        expect(parse_with_openapi_field('3.0.0-rc1').openapi_version).to eq :v3_0
+      end
     end
 
     context 'with an unknown major version like "4.0.0"' do

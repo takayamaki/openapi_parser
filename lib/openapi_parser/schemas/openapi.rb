@@ -23,7 +23,11 @@ module OpenAPIParser::Schemas
 
     # @return [Symbol] :v3_0 / :v3_1 / :unknown
     def openapi_version
-      :v3_0
+      if openapi.start_with?('3.1')
+        :v3_1
+      else
+        :v3_0
+      end
     end
 
     # @!attribute [r] paths
