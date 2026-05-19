@@ -72,7 +72,9 @@ RSpec.describe OpenAPIParser::Schemas::OpenAPI do
     end
 
     context 'with a non-string openapi field' do
-      it 'returns :unknown'
+      it 'returns :unknown' do
+        expect(parse_with_openapi_field(31).openapi_version).to eq :unknown
+      end
     end
   end
 end
