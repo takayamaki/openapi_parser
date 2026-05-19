@@ -30,7 +30,9 @@ RSpec.describe OpenAPIParser::Schemas::OpenAPI do
     end
 
     context 'with a typical 3.0.x version like "3.0.0"' do
-      it 'returns :v3_0'
+      it 'returns :v3_0' do
+        expect(parse_with_openapi_field('3.0.0').openapi_version).to eq :v3_0
+      end
     end
 
     context 'with a typical 3.1.x version like "3.1.0"' do
