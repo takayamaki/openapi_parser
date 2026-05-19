@@ -18,26 +18,56 @@ RSpec.describe 'OpenAPIParser::SpecValidator::Rules::ExclusiveMaximum' do
   end
 
   context 'with a 3.0 document using a 3.0-style boolean exclusiveMaximum' do
-    it 'reports no violation'
+    it 'reports no violation' do
+      root = schema_with_exclusive_maximum('3.0.0', true, maximum_value: 5)
+      expect(run_rule_for(root)).to eq []
+    end
   end
 
   context 'with a 3.1 document using a 3.1-style numeric exclusiveMaximum' do
-    it 'reports no violation'
+    it 'reports no violation' do
+      root = schema_with_exclusive_maximum('3.1.0', 5)
+      expect(run_rule_for(root)).to eq []
+    end
   end
 
   context 'with a 3.0 document using a 3.1-style numeric exclusiveMaximum' do
-    it 'reports one violation pointing at the offending schema'
+    it 'reports one violation pointing at the offending schema' do
+      root = schema_with_exclusive_maximum('3.0.0', 5)
+      violations = run_rule_for(root)
+      expect(violations.size).to eq 1
+      expect(violations.first.path).to eq '#/components/schemas/Sample'
+      expect(violations.first.rule_name).to eq :exclusive_maximum
+      expect(violations.first.message).to include('numeric exclusiveMaximum')
+    end
   end
 
   context 'with a 3.1 document using a 3.0-style boolean exclusiveMaximum' do
-    it 'reports one violation pointing at the offending schema'
+    it 'reports one violation pointing at the offending schema' do
+      root = schema_with_exclusive_maximum('3.1.0', true, maximum_value: 5)
+      violations = run_rule_for(root)
+      expect(violations.size).to eq 1
+      expect(violations.first.message).to include('Boolean exclusiveMaximum')
+    end
   end
 
   context 'with an :unknown version document containing exclusiveMaximum' do
-    it 'reports no violation (rule skipped)'
+    it 'reports no violation (rule skipped)' do
+      root = schema_with_exclusive_maximum('4.0.0', 5)
+      expect(run_rule_for(root)).to eq []
+    end
   end
 
   context 'with a schema that has no exclusiveMaximum' do
-    it 'reports no violation'
+    it 'reports no violation' do
+      raw = {
+        'openapi' => '3.0.0',
+        'info' => { 'title' => 'test', 'version' => '1.0' },
+        'paths' => {},
+        'components' => { 'schemas' => { 'Sample' => { 'type' => 'integer' } } },
+      }
+      root = OpenAPIParser.parse(raw, strict_reference_validation: false)
+      expect(run_rule_for(root)).to eq []
+    end
   end
 end

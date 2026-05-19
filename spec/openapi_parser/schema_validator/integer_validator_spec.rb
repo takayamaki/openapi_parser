@@ -157,15 +157,28 @@ RSpec.describe OpenAPIParser::SchemaValidator::IntegerValidator do
     end
 
     context 'with a value strictly less than exclusiveMaximum' do
-      it 'passes validation'
+      let(:params) { { 'my_integer' => 9 } }
+      it { expect(subject).to eq({ 'my_integer' => 9 }) }
     end
 
     context 'with a value equal to exclusiveMaximum' do
-      it 'raises MoreThanExclusiveMaximum'
+      let(:params) { { 'my_integer' => 10 } }
+      it do
+        expect { subject }.to raise_error do |e|
+          expect(e).to be_kind_of(OpenAPIParser::MoreThanExclusiveMaximum)
+          expect(e.message).to end_with('10 cannot be more than or equal to exclusive maximum value')
+        end
+      end
     end
 
     context 'with a value greater than exclusiveMaximum' do
-      it 'raises MoreThanExclusiveMaximum'
+      let(:params) { { 'my_integer' => 11 } }
+      it do
+        expect { subject }.to raise_error do |e|
+          expect(e).to be_kind_of(OpenAPIParser::MoreThanExclusiveMaximum)
+          expect(e.message).to end_with('11 cannot be more than or equal to exclusive maximum value')
+        end
+      end
     end
   end
 
