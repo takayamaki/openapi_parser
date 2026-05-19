@@ -143,6 +143,32 @@ RSpec.describe OpenAPIParser::SchemaValidator::IntegerValidator do
     end
   end
 
+  describe 'validate integer 3.1-style numeric exclusiveMaximum value' do
+    subject { OpenAPIParser::SchemaValidator.validate(params, target_schema, options) }
+
+    let(:params) { {} }
+    let(:replace_schema) do
+      {
+        my_integer: {
+          type: 'integer',
+          exclusiveMaximum: 10,
+        },
+      }
+    end
+
+    context 'with a value strictly less than exclusiveMaximum' do
+      it 'passes validation'
+    end
+
+    context 'with a value equal to exclusiveMaximum' do
+      it 'raises MoreThanExclusiveMaximum'
+    end
+
+    context 'with a value greater than exclusiveMaximum' do
+      it 'raises MoreThanExclusiveMaximum'
+    end
+  end
+
   describe 'validate integer 3.1-style numeric exclusiveMinimum value' do
     subject { OpenAPIParser::SchemaValidator.validate(params, target_schema, options) }
 
