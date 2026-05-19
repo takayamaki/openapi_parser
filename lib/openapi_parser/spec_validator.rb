@@ -3,6 +3,21 @@ require_relative 'spec_validator/rule'
 require_relative 'spec_validator/rules/exclusive_minimum'
 
 module OpenAPIParser
+  # Raised when strict_specification_version is :raise and at least one
+  # SpecViolation was collected.
+  class SpecViolationError < OpenAPIError
+    attr_reader :violations
+
+    def initialize(violations)
+      @violations = violations
+      super(nil)
+    end
+
+    def message
+      @violations.map(&:to_s).join("\n")
+    end
+  end
+
   # Validates that a parsed OpenAPI document is consistent with the version
   # it declares (3.0 vs 3.1). The parse layer is intentionally permissive;
   # this validator runs after parse and reports per-rule mismatches as

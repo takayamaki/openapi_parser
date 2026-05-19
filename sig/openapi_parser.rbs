@@ -8,6 +8,7 @@ module OpenAPIParser
   def self.parse_yaml: (String? content) -> Hash[bot, bot]
   def self.parse_json: (String? content) -> Hash[bot, bot]
   def self.load_hash: (Hash[bot, bot] hash, config: untyped, uri: OpenAPIParser::readable_uri?, schema_registry: Hash[bot, bot]) -> OpenAPIParser::Schemas::OpenAPI
+  def self.emit_spec_violations: (OpenAPIParser::Schemas::OpenAPI root, OpenAPIParser::Config config) -> void
 end
 
 module OpenAPIParser

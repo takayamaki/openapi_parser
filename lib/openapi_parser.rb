@@ -100,7 +100,24 @@ module OpenAPIParser
           path_item.set_path_item_to_operation
         end
 
+        emit_spec_violations(root, config)
+
         root
+      end
+
+      def emit_spec_violations(root, config)
+        policy = config.strict_specification_version
+        return if policy == :silent
+
+        violations = OpenAPIParser::SpecValidator.run(root)
+        return if violations.empty?
+
+        case policy
+        when :warn
+          violations.each { |v| warn(v.to_s) }
+        when :raise
+          raise OpenAPIParser::SpecViolationError.new(violations)
+        end
       end
   end
 end

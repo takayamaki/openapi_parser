@@ -61,14 +61,40 @@ RSpec.describe 'OpenAPIParser parse with strict_specification_version' do
   end
 
   context 'when strict_specification_version is :silent (default)' do
-    it 'parses without warning or raising even if violations exist'
+    it 'parses without warning or raising even if violations exist' do
+      expect do
+        OpenAPIParser.parse(
+          schema_with_30_doc_using_31_exclusive_minimum,
+          strict_reference_validation: false,
+        )
+      end.not_to output.to_stderr
+    end
   end
 
   context 'when strict_specification_version is :warn' do
-    it 'parses but emits a warn for each violation'
+    it 'parses but emits a warn for each violation' do
+      expect do
+        OpenAPIParser.parse(
+          schema_with_30_doc_using_31_exclusive_minimum,
+          strict_reference_validation: false,
+          strict_specification_version: :warn,
+        )
+      end.to output(/exclusive_minimum.*numeric exclusiveMinimum/m).to_stderr
+    end
   end
 
   context 'when strict_specification_version is :raise' do
-    it 'raises OpenAPIParser::SpecViolationError carrying the violations'
+    it 'raises OpenAPIParser::SpecViolationError carrying the violations' do
+      expect do
+        OpenAPIParser.parse(
+          schema_with_30_doc_using_31_exclusive_minimum,
+          strict_reference_validation: false,
+          strict_specification_version: :raise,
+        )
+      end.to raise_error(OpenAPIParser::SpecViolationError) do |e|
+        expect(e.violations.size).to eq 1
+        expect(e.violations.first.rule_name).to eq :exclusive_minimum
+      end
+    end
   end
 end
