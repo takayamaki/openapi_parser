@@ -4,8 +4,9 @@ class OpenAPIParser::SchemaValidator
     # @param [Object] value
     # @param [OpenAPIParser::Schemas::Schema] schema
     def check_minimum_maximum(value, schema)
-      include_min_max = schema.minimum || schema.maximum
-      return [value, nil] unless include_min_max
+      has_min_or_max = schema.minimum || schema.maximum
+      has_numeric_exclusive_min = schema.exclusiveMinimum.is_a?(Numeric)
+      return [value, nil] unless has_min_or_max || has_numeric_exclusive_min
 
       validate(value, schema)
       [value, nil]
@@ -18,8 +19,20 @@ class OpenAPIParser::SchemaValidator
       def validate(value, schema)
         reference = schema.object_reference
 
+        # 3.1: exclusiveMinimum is a standalone numeric bound. We dispatch on
+        # value type rather than the document's declared version so that a
+        # writer who put a number here gets the strict-greater-than semantic
+        # they intended even on a 3.0 document (SpecValidator reports the
+        # version mismatch separately).
+        if schema.exclusiveMinimum.is_a?(Numeric) && value <= schema.exclusiveMinimum
+          raise OpenAPIParser::LessThanExclusiveMinimum.new(value, reference)
+        end
+
         if schema.minimum
-          if schema.exclusiveMinimum && value <= schema.minimum
+          # 3.0: exclusiveMinimum is a Boolean modifier on `minimum`. We
+          # require an exact `== true` so a 3.1-style numeric does not
+          # accidentally satisfy this branch via truthiness.
+          if schema.exclusiveMinimum == true && value <= schema.minimum
             raise OpenAPIParser::LessThanExclusiveMinimum.new(value, reference)
           elsif value < schema.minimum
             raise OpenAPIParser::LessThanMinimum.new(value, reference)
