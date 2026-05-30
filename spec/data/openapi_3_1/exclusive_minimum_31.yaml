@@ -1,0 +1,26 @@
+openapi: 3.1.0
+info:
+  title: Membership API
+  version: '1.0'
+paths:
+  /members:
+    post:
+      summary: Register a member
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Member'
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    Member:
+      type: object
+      properties:
+        # 3.1 form: a bare numeric exclusive bound is the legitimate form
+        # under 3.1, so no violation is expected here.
+        age:
+          type: integer
+          exclusiveMinimum: 0
