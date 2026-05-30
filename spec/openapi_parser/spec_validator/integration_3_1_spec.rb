@@ -109,5 +109,19 @@ RSpec.describe 'OpenAPIParser 3.1 spec validator (integration)' do
     end
   end
 
+  describe 'singular example on a Schema (deprecated in 3.1)' do
+    it 'warns on the version-mismatched document under :warn' do
+      expect_mismatch_warns('example_keyword_31.yaml', [:example_singular_deprecation])
+    end
+
+    it 'raises SpecViolationError on the version-mismatched document under :raise' do
+      expect_mismatch_raises('example_keyword_31.yaml', [:example_singular_deprecation])
+    end
+
+    it 'stays clean on the correctly-versioned document' do
+      expect_clean('example_keyword_30.yaml')
+    end
+  end
+
   # New spec-change points are appended above this line, one per rule PR.
 end
