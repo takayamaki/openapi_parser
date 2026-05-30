@@ -123,5 +123,19 @@ RSpec.describe 'OpenAPIParser 3.1 spec validator (integration)' do
     end
   end
 
+  describe 'components.pathItems (3.1 addition)' do
+    it 'warns on the version-mismatched document under :warn' do
+      expect_mismatch_warns('path_items_30.yaml', [:path_items_in30])
+    end
+
+    it 'raises SpecViolationError on the version-mismatched document under :raise' do
+      expect_mismatch_raises('path_items_30.yaml', [:path_items_in30])
+    end
+
+    it 'stays clean on the correctly-versioned document' do
+      expect_clean('path_items_31.yaml')
+    end
+  end
+
   # New spec-change points are appended above this line, one per rule PR.
 end
