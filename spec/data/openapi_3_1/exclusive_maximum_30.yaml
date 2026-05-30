@@ -1,0 +1,27 @@
+openapi: 3.0.3
+info:
+  title: Pricing API
+  version: '1.0'
+paths:
+  /quotes:
+    post:
+      summary: Request a price quote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quote'
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    Quote:
+      type: object
+      properties:
+        # 3.1 form: a bare numeric exclusive bound. In 3.0 this should be
+        # `maximum: 100` paired with `exclusiveMaximum: true`, so the numeric
+        # value is a spec violation on a 3.0 document.
+        discountPercent:
+          type: number
+          exclusiveMaximum: 100
