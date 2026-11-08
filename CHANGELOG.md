@@ -1,4 +1,6 @@
 ## Unreleased
+* support the `dependentSchemas` keyword (OpenAPI 3.1): when an object has a property, the whole object must also be valid against the subschema for that property. The error is the one the subschema gives, such as `NotExistRequiredKey`. It was ignored before, so a value that passed may now fail
+* add `SpecValidator` rule `DependentSchemasIn30`: detect `dependentSchemas` in 3.0 documents (3.1 addition)
 
 ## 2.7.0 (2026-11-06)
 * match `additionalOperations` method names case-sensitively ([OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html#path-item-object), [RFC 9110 §9.1](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.1)). Standard methods still match their fixed fields in any case
