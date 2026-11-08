@@ -1,4 +1,6 @@
 ## Unreleased
+* support the `if`, `then` and `else` keywords (OpenAPI 3.1): a value valid against `if` is now checked with `then`, and any other value with `else`. They were ignored before, so a value that passed may now fail. When `coerce_value` is on, `if` is checked with coercion and `then` checks the value coerced by `if`. The properties that `if` coerces stay coerced in the Hash
+* add `SpecValidator` rule `IfThenElseIn30`: detect `if`, `then` and `else` in 3.0 documents (3.1 additions)
 
 ## 2.7.0 (2026-11-06)
 * match `additionalOperations` method names case-sensitively ([OpenAPI 3.2](https://spec.openapis.org/oas/v3.2.0.html#path-item-object), [RFC 9110 §9.1](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.1)). Standard methods still match their fixed fields in any case
